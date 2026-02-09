@@ -149,6 +149,28 @@ body{margin:0;font-family:Arial,sans-serif;background:
   display:none;
 }
 
+.flash{
+  position:fixed;
+  inset:0;
+  background:white;
+  opacity:0;
+  pointer-events:none;
+  z-index:999999;
+  animation: flash 3.5s infinite;
+}
+
+@keyframes flash{
+  0%{opacity:0}
+  15%{opacity:0.12}
+  20%{opacity:0}
+  45%{opacity:0.18}
+  50%{opacity:0}
+  75%{opacity:0.1}
+  80%{opacity:0}
+  100%{opacity:0}
+}
+
+
 </style>
 </head>
 <body>
@@ -351,8 +373,10 @@ function finalScreen(){
   overlay.className='overlay';
   overlay.innerHTML=`<div class='final-text'>И Я ТЕБЯ ЛЮБЛЮ ❤️</div>`;
   document.getElementById('app').appendChild(overlay);
+
   boom.play();
   fireworks();
+  startFlash();
 }
 
 function fireworks(){
@@ -374,8 +398,14 @@ function fireworks(){
     }
   },500);
 }
+   function startFlash(){
+  const flash=document.createElement('div');
+  flash.className='flash';
+  document.body.appendChild(flash);
+}
 
 showHeart();
 </script>
 </body>
 </html>
+
