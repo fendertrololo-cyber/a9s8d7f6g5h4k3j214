@@ -99,9 +99,69 @@ body{margin:0;font-family:Arial,sans-serif;background:
   .message{font-size:20px}
   .heart{font-size:64px}
 }
+#lockScreen{
+  position:fixed;
+  inset:0;
+  background:linear-gradient(135deg,#0b0b0b,#1a1a1a);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:99999;
+}
+
+.lockBox{
+  background:rgba(255,255,255,.05);
+  padding:30px 35px;
+  border-radius:18px;
+  text-align:center;
+  box-shadow:0 0 25px rgba(255,0,100,.35);
+  backdrop-filter: blur(10px);
+  color:#fff;
+}
+
+.lockBox h2{
+  margin-bottom:10px;
+}
+
+.lockBox input{
+  width:100%;
+  padding:10px 12px;
+  border-radius:10px;
+  border:none;
+  margin:10px 0 12px;
+  font-size:16px;
+}
+
+.lockBox button{
+  padding:10px 26px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(45deg,#ff6b81,#ff4757);
+  color:#fff;
+  font-size:16px;
+  cursor:pointer;
+}
+
+#errorText{
+  color:#ff6b81;
+  font-size:14px;
+  margin-top:10px;
+  display:none;
+}
+
 </style>
 </head>
 <body>
+
+<div id="lockScreen">
+  <div class="lockBox">
+    <h2>💖 Доступ только для тебя</h2>
+    <p>Введи секретный пароль</p>
+    <input type="password" id="passwordInput" placeholder="Пароль">
+    <button onclick="checkPassword()">Войти</button>
+    <div id="errorText">Неверный пароль 😢</div>
+  </div>
+</div>
 
 <div id="app">
   <div class="center" id="center"></div>
@@ -118,6 +178,20 @@ let hintRemoved=false;
 
 const center=document.getElementById('center');
 const boom=document.getElementById('boom');
+
+const PASSWORD = "валентинка"; // ← ЗДЕСЬ СТАВИШЬ СВОЙ ПАРОЛЬ
+
+function checkPassword(){
+  const input = document.getElementById("passwordInput");
+  const error = document.getElementById("errorText");
+
+  if(input.value === PASSWORD){
+    document.getElementById("lockScreen").style.display="none";
+  } else {
+    error.style.display="block";
+  }
+}
+
 
 function showHeart(){
   center.innerHTML = `
