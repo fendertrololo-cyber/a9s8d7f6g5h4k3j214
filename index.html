@@ -317,10 +317,50 @@ function bonus(img1,text,img2=null){
 }
 
 function error404(){
-  center.innerHTML=`<div class='overlay'>Ошибка 404<br><small>Система дала сбой. Слишком много чувств.</small><button style='display:none'>Продолжить</button></div>`;
+  center.innerHTML=`
+    <div class='overlay'>
+      Ошибка 404<br>
+      <small>Система дала сбой. Слишком много чувств.</small>
+      <button style='display:none'>Продолжить</button>
+    </div>
+  `;
+
   const btn=center.querySelector('button');
   setTimeout(()=>btn.style.display='block',5000);
-  btn.onclick=()=>{locked=false;showHeart()};
+
+  btn.onclick = () => {
+    // ❤️ Поднимающиеся сердечки
+    for (let i = 0; i < 20; i++) {
+        const heart = document.createElement('div');
+        heart.innerText = '❤️';
+        heart.style.position = 'fixed';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.bottom = '0';
+        const size = 14 + Math.random() * 16;
+        heart.style.fontSize = size + 'px';
+        heart.style.pointerEvents = 'none';
+        heart.style.opacity = 1;
+        document.body.appendChild(heart);
+
+        const duration = 4000 + Math.random() * 3000;
+        const xMove = (Math.random() - 0.5) * 100;
+        const yMove = - (100 + Math.random() * 50);
+
+        heart.animate([
+            { transform: 'translate(0,0)', opacity: 1 },
+            { transform: `translate(${xMove}px, ${yMove}vh)`, opacity: 0 }
+        ], {
+            duration: duration,
+            easing: 'linear',
+            fill: 'forwards'
+        });
+
+        setTimeout(() => heart.remove(), duration);
+    }
+
+    locked = false;
+    showHeart();
+  };
 }
 
 function deepMessage(){
@@ -408,4 +448,5 @@ showHeart();
 </script>
 </body>
 </html>
+
 
