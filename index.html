@@ -167,7 +167,7 @@ body{margin:0;font-family:Arial,sans-serif;background:
   <div class="center" id="center"></div>
 </div>
 
-<audio id="boom" src="fireworks.mp3"></audio>
+<audio id="boom" src="fireworks.mp3" loop></audio>
 <audio id="bgm" src="music.mp3" loop></audio>
 
 
@@ -190,7 +190,7 @@ function checkPassword(){
 
   if(input.value === PASSWORD){
     document.getElementById("lockScreen").style.display="none";
-	bgm.volume = 0.35;
+	bgm.volume = 0.10;
     bgm.play().catch(()=>{});
   } else {
     error.style.display="block";
@@ -378,4 +378,5 @@ showHeart();
 </script>
 </body>
 </html>
+
 
