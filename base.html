@@ -168,6 +168,8 @@ body{margin:0;font-family:Arial,sans-serif;background:
 </div>
 
 <audio id="boom" src="https://assets.mixkit.co/music/493/493.mp3"></audio>
+<audio id="bgm" src="https://assets.mixkit.co/music/493/493.mp3" loop></audio>
+
 
 <script>
 let step=0;
@@ -175,10 +177,11 @@ let scale=1;
 let locked=false;
 let hintClicks=0;
 let hintRemoved=false;
+let musicStarted = false;
 
 const center=document.getElementById('center');
 const boom=document.getElementById('boom');
-
+const bgm = document.getElementById('bgm');
 const PASSWORD = "валентинка"; // ← ЗДЕСЬ СТАВИШЬ СВОЙ ПАРОЛЬ
 
 function checkPassword(){
@@ -187,6 +190,8 @@ function checkPassword(){
 
   if(input.value === PASSWORD){
     document.getElementById("lockScreen").style.display="none";
+	bgm.volume = 0.35;
+    bgm.play().catch(()=>{});
   } else {
     error.style.display="block";
   }
@@ -219,7 +224,9 @@ function showHeart(){
       const h = document.getElementById('hint');
       if(h) h.remove();
       hintRemoved = true;
+	  
     }
+
 
     scale += 0.08;
     wrapper.style.transform = `scale(${scale})`;
