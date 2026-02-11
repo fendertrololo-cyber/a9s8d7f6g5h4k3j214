@@ -76,8 +76,8 @@ body {
 .hint{
   position:absolute;
   top:18%;
-  font-size:14px;
-  opacity:.80;
+  font-size:20px;
+  opacity:.85;
   animation: hintPulse 1.2s ease-in-out infinite;
   pointer-events:none;
 }
@@ -223,18 +223,27 @@ let musicStarted = false;
 const center=document.getElementById('center');
 const boom=document.getElementById('boom');
 const bgm = document.getElementById('bgm');
-const PASSWORD = "валентинка"; // ← ЗДЕСЬ СТАВИШЬ СВОЙ ПАРОЛЬ
+const PASSWORD = "валентинка"; // убедись, что она в глобальной области
 
 function checkPassword(){
   const input = document.getElementById("passwordInput");
   const error = document.getElementById("errorText");
 
   if(input.value === PASSWORD){
-    document.getElementById("lockScreen").style.display="none";
-	bgm.volume = 0.2;
-    bgm.play().catch(()=>{});
+    document.getElementById("lockScreen").style.display = "none";
+
+    // Музыка с безопасным автоплеем
+    const bgm = document.getElementById("bgm");
+    bgm.volume = 0.2;
+    bgm.currentTime = 0;
+
+    bgm.play().catch(err => {
+      console.log("Автоплей заблокирован:", err);
+      // Встроим маленькую кнопку для запуска музыки вручную, если нужно
+    });
+
   } else {
-    error.style.display="block";
+    error.style.display = "block";
   }
 }
 
@@ -268,12 +277,7 @@ function showHeart(){
   wrapper.onclick = () => {
     if(locked) return;
     locked = true;
-
-	// вибрация при клике ❤️
-    if (navigator.vibrate) {
-     navigator.vibrate(35);
-    }
-
+	
 	// мини-звук клика
     const clickSound = document.getElementById('clickSound');
     clickSound.currentTime = 0; // чтобы можно было быстро кликать подряд
@@ -403,11 +407,58 @@ function error404(){
 }
 
 function deepMessage(){
-  center.innerHTML=`<div class='overlay'>Аделин, ты стала для меня чем-то гораздо большим, чем просто девушка на расстоянии.<br><small>Я просто хотел, чтобы ты это знала. Я жду момента, когда мы сможем увидеться, и знаю, что ты тоже ждешь. Вместе мы сможем сделать этот день реальностью.</small><button style='display:none'>Продолжить</button></div>`;
-  const btn=center.querySelector('button');
-  setTimeout(()=>btn.style.display='block',5000);
-  btn.onclick=()=>{locked=false;showHeart()};
+  center.innerHTML=`
+    <div class='overlay' id="planeOverlay">
+      Аделин, ты стала для меня чем-то гораздо большим, чем просто девушка на расстоянии.<br>
+      <small>Я просто хотел, чтобы ты это знала.</small>
+      <button id="planeBtn" style='display:none'>Купить билет ✈️</button>
+    </div>
+  `;
+
+  const btn = document.getElementById('planeBtn');
+  setTimeout(() => btn.style.display='block', 5000);
+
+  let planeFlying = false; // флаг, чтобы самолёт не запускался несколько раз
+
+  btn.onclick = () => {
+    if (planeFlying) return;
+    planeFlying = true;
+
+    const overlay = document.getElementById('planeOverlay');
+    overlay.style.display = 'none'; // скрываем текст сразу
+
+    // создаём самолёт
+    const plane = document.createElement('img');
+    plane.src = 'plane.png'; // путь к PNG самолёта, носом вверх
+    plane.style.position = 'fixed';
+    plane.style.bottom = '-50%';  // старт ниже экрана
+    plane.style.left = '50%';     // центр по горизонтали
+    plane.style.transform = 'translateX(-50%)'; // точно по центру
+    plane.style.width = '170vw';   // почти весь экран
+    plane.style.zIndex = 99999;
+    plane.style.transition = 'all 3s ease-in-out';
+    document.body.appendChild(plane);
+
+    // проигрываем звук самолёта
+    const planeSound = new Audio('plane.mp3');
+    planeSound.volume = 0.3;
+    planeSound.play().catch(()=>{});
+
+    // анимация пролёта снизу вверх
+    setTimeout(()=>{
+      plane.style.bottom = '120%'; // летит выше экрана
+    }, 50);
+
+    // после пролёта удаляем самолёт и запускаем сердце
+    setTimeout(()=>{
+      plane.remove();
+      planeFlying = false;   // флаг сбросился
+      showHeart();
+    }, 3200);
+  };
 }
+
+
 
 function dropOneRose(){
   const p=document.createElement('div');
@@ -499,18 +550,3 @@ showHeart();
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
