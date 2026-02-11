@@ -76,8 +76,8 @@ body {
 .hint{
   position:absolute;
   top:18%;
-  font-size:20px;
-  opacity:.85;
+  font-size:14px;
+  opacity:.80;
   animation: hintPulse 1.2s ease-in-out infinite;
   pointer-events:none;
 }
@@ -223,27 +223,18 @@ let musicStarted = false;
 const center=document.getElementById('center');
 const boom=document.getElementById('boom');
 const bgm = document.getElementById('bgm');
-const PASSWORD = "валентинка"; // убедись, что она в глобальной области
+const PASSWORD = "валентинка"; // ← ЗДЕСЬ СТАВИШЬ СВОЙ ПАРОЛЬ
 
 function checkPassword(){
   const input = document.getElementById("passwordInput");
   const error = document.getElementById("errorText");
 
   if(input.value === PASSWORD){
-    document.getElementById("lockScreen").style.display = "none";
-
-    // Музыка с безопасным автоплеем
-    const bgm = document.getElementById("bgm");
-    bgm.volume = 0.2;
-    bgm.currentTime = 0;
-
-    bgm.play().catch(err => {
-      console.log("Автоплей заблокирован:", err);
-      // Встроим маленькую кнопку для запуска музыки вручную, если нужно
-    });
-
+    document.getElementById("lockScreen").style.display="none";
+	bgm.volume = 0.2;
+    bgm.play().catch(()=>{});
   } else {
-    error.style.display = "block";
+    error.style.display="block";
   }
 }
 
@@ -277,7 +268,12 @@ function showHeart(){
   wrapper.onclick = () => {
     if(locked) return;
     locked = true;
-	
+
+	// вибрация при клике ❤️
+    if (navigator.vibrate) {
+     navigator.vibrate(35);
+    }
+
 	// мини-звук клика
     const clickSound = document.getElementById('clickSound');
     clickSound.currentTime = 0; // чтобы можно было быстро кликать подряд
@@ -458,8 +454,6 @@ function deepMessage(){
   };
 }
 
-
-
 function dropOneRose(){
   const p=document.createElement('div');
   p.className='petal';
@@ -550,4 +544,3 @@ showHeart();
 </script>
 </body>
 </html>
-
