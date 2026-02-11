@@ -98,42 +98,17 @@ body {
 
 .final-text{font-size:34px;margin-top:20px;animation:fade 1s;text-shadow:0 0 20px #fff;}
 
-.firework{
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-  z-index: 999999;
-}
-
+.firework{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:20;}
 .spark{
   position:absolute;
-  width:8px;
-  height:8px;
+  width:6px;
+  height:6px;
   border-radius:50%;
-  background: currentColor;
-  box-shadow:
-    0 0 10px currentColor,
-    0 0 20px currentColor,
-    0 0 40px currentColor,
-    0 0 60px currentColor;
-  animation:spark 1.3s ease-out forwards;
+  animation:spark 1.2s linear infinite;
+  box-shadow: 0 0 8px currentColor;
 }
 
-
-@keyframes spark {
-  0% {
-    transform: translate(0,0) scale(0);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  100% {
-    transform: translate(var(--x), var(--y)) scale(1);
-    opacity: 0;
-  }
-}
+@keyframes spark{from{transform:translate(0,0)}to{transform:translate(var(--x),var(--y)) scale(0)}}
 
 @media (max-width:600px){
   .photo{max-width:42vw;max-height:32vh}
@@ -482,37 +457,32 @@ function finalScreen(){
 function fireworks(){
   const colors = ['#ff3b30', '#ffd700', '#4facfe', '#ffffff', '#ff6b81'];
 
+  const fw = document.createElement('div');
+  fw.className = 'firework';
+  document.body.appendChild(fw);
+
   setInterval(() => {
-    const fw = document.createElement('div');
-    fw.className = 'firework';
-    document.body.appendChild(fw);
-
     const x = Math.random() * window.innerWidth;
-    const y = Math.random() * window.innerHeight * 0.45;
+    const y = Math.random() * window.innerHeight / 2;
 
-    for(let i = 0; i < 55; i++){
+    for(let i = 0; i < 36; i++){
       const s = document.createElement('div');
       s.className = 'spark';
       s.style.left = x + 'px';
       s.style.top = y + 'px';
 
       const color = colors[Math.floor(Math.random() * colors.length)];
+      s.style.color = color;
       s.style.background = color;
 
-      s.style.setProperty('--x', (Math.random()*420 - 210) + 'px');
-      s.style.setProperty('--y', (Math.random()*420 - 210) + 'px');
-
-      // микрозадержка старта каждой искры
-      s.style.animationDelay = (Math.random() * 0.08) + 's';
+      s.style.setProperty('--x', (Math.random()*300 - 150) + 'px');
+      s.style.setProperty('--y', (Math.random()*300 - 150) + 'px');
 
       fw.appendChild(s);
+      setTimeout(() => s.remove(), 900);
     }
-
-    setTimeout(() => fw.remove(), 1300);
-
   }, 450);
 }
-
 
 function startFlash(){
   const flash=document.createElement('div');
@@ -524,9 +494,6 @@ showHeart();
 </script>
 </body>
 </html>
-
-
-
 
 
 
