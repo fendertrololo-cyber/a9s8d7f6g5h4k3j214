@@ -76,8 +76,8 @@ body {
 .hint{
   position:absolute;
   top:18%;
-  font-size:14px;
-  opacity:.80;
+  font-size:20px;
+  opacity:.85;
   animation: hintPulse 1.2s ease-in-out infinite;
   pointer-events:none;
 }
@@ -210,7 +210,6 @@ body {
 <audio id="boom" src="fireworks.mp3" loop></audio>
 <audio id="bgm" src="music.mp3" loop></audio>
 <audio id="clickSound" src="click.mp3"></audio>
-<audio id="continueSound" src="continue.mp3"></audio>
 
 
 <script>
@@ -224,27 +223,28 @@ let musicStarted = false;
 const center=document.getElementById('center');
 const boom=document.getElementById('boom');
 const bgm = document.getElementById('bgm');
-const PASSWORD = "валентинка"; // ← ЗДЕСЬ СТАВИШЬ СВОЙ ПАРОЛЬ
+const PASSWORD = "валентинка"; // убедись, что она в глобальной области
 
 function checkPassword(){
   const input = document.getElementById("passwordInput");
   const error = document.getElementById("errorText");
 
   if(input.value === PASSWORD){
-    document.getElementById("lockScreen").style.display="none";
-	bgm.volume = 0.2;
-    bgm.play().catch(()=>{});
+    document.getElementById("lockScreen").style.display = "none";
+
+    // Музыка с безопасным автоплеем
+    const bgm = document.getElementById("bgm");
+    bgm.volume = 0.2;
+    bgm.currentTime = 0;
+
+    bgm.play().catch(err => {
+      console.log("Автоплей заблокирован:", err);
+      // Встроим маленькую кнопку для запуска музыки вручную, если нужно
+    });
+
   } else {
-    error.style.display="block";
+    error.style.display = "block";
   }
-}
-
-
-function playContinueSound(){
-  const s = document.getElementById('continueSound');
-  s.currentTime = 0;
-  s.volume = 0.35;
-  s.play().catch(()=>{});
 }
 
 
@@ -277,12 +277,7 @@ function showHeart(){
   wrapper.onclick = () => {
     if(locked) return;
     locked = true;
-
-	// вибрация при клике ❤️
-    if (navigator.vibrate) {
-     navigator.vibrate(35);
-    }
-
+	
 	// мини-звук клика
     const clickSound = document.getElementById('clickSound');
     clickSound.currentTime = 0; // чтобы можно было быстро кликать подряд
@@ -361,12 +356,7 @@ function bonus(img1,text,img2=null){
 
   const btn=center.querySelector('button');
   setTimeout(()=>btn.style.display='block',5000);
-  btn.onclick = () => {
-  playContinueSound();
-  locked = false;
-  showHeart();
-};
-
+  btn.onclick=()=>{locked=false;showHeart()};
 }
 
 function error404(){
@@ -382,9 +372,6 @@ function error404(){
   setTimeout(()=>btn.style.display='block',5000);
 
   btn.onclick = () => {
-  
-     playContinueSound();
-	 
     // ❤️ Поднимающиеся сердечки
     for (let i = 0; i < 20; i++) {
         const heart = document.createElement('div');
@@ -470,6 +457,8 @@ function deepMessage(){
     }, 3200);
   };
 }
+
+
 
 function dropOneRose(){
   const p=document.createElement('div');
@@ -561,3 +550,6 @@ showHeart();
 </script>
 </body>
 </html>
+
+
+
