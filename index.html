@@ -210,6 +210,7 @@ body {
 <audio id="boom" src="fireworks.mp3" loop></audio>
 <audio id="bgm" src="music.mp3" loop></audio>
 <audio id="clickSound" src="click.mp3"></audio>
+<audio id="continueSound" src="continue.mp3"></audio>
 
 
 <script>
@@ -236,6 +237,14 @@ function checkPassword(){
   } else {
     error.style.display="block";
   }
+}
+
+
+function playContinueSound(){
+  const s = document.getElementById('continueSound');
+  s.currentTime = 0;
+  s.volume = 0.35;
+  s.play().catch(()=>{});
 }
 
 
@@ -352,7 +361,12 @@ function bonus(img1,text,img2=null){
 
   const btn=center.querySelector('button');
   setTimeout(()=>btn.style.display='block',5000);
-  btn.onclick=()=>{locked=false;showHeart()};
+  btn.onclick = () => {
+  playContinueSound();
+  locked = false;
+  showHeart();
+};
+
 }
 
 function error404(){
@@ -368,6 +382,9 @@ function error404(){
   setTimeout(()=>btn.style.display='block',5000);
 
   btn.onclick = () => {
+  
+     playContinueSound();
+	 
     // ❤️ Поднимающиеся сердечки
     for (let i = 0; i < 20; i++) {
         const heart = document.createElement('div');
@@ -544,4 +561,3 @@ showHeart();
 </script>
 </body>
 </html>
-
